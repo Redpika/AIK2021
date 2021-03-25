@@ -11,6 +11,7 @@ public class AIGroup3 extends AI {
         resetMap();
     }
 
+    //used to clear the map to the beginning of the game
     public void resetMap (){
         for (int x = 0; x<10; x++) {
             for (int y = 0; y < 10; y++) {
@@ -40,25 +41,38 @@ public class AIGroup3 extends AI {
 
     @Override
     public Card evaluateHand() {
+        double maxValue;
+        int maxIdx;
         Card selectedCard = null;
         setTwinCardEnabled(false);
         int bestIdxCellOneDim = 0;
 
+        //check to remove dead card (might be first in priority to get new card)
+
+        for (int n = 0; n < 6; n++) {
+            List<Integer> idx = getGameModel().getSequenceBoard().getAvailableCellsIdx(getCards().get(n));
+            //basic outline: check all the cards. check the value and get max. if same pick first card with the value.
+            //problem: need to check the how the idx works
+        }
+
         //always play twin cards
         List<Card> twinCards = getTwinCards();
         if(twinCards != null){
+            //basic outline: check the total result from the twin card
+            //problem: same as the normal
             if(getGameModel().getSequenceBoard().getAvailableCellsIdx(twinCards.get(0)).size() == 2 ) {
                 selectedCard = twinCards.get(0);
                 setTwinCardEnabled(true);
                 return selectedCard;
             }
         }
-
         //always select the first card
-        selectedCard = getCards().get(0);
+        /*selectedCard = getCards().get(0);
         List<Integer> idx = getGameModel().getSequenceBoard().getAvailableCellsIdx(selectedCard);
         if(idx.size() > 0)
-            setSelectedIdxOneDim(idx.get(0));
+            setSelectedIdxOneDim(idx.get(0));*/
+
+
         return selectedCard;
     }
 
@@ -114,7 +128,8 @@ public class AIGroup3 extends AI {
     }
 
     public double calculateHeuristic(int x, int y) {
-        //
+        //x1 ~ x6: variables
+        //calc: counting for calc
         int x1 = 0, x2 = 0, x3 = 0, x4 = 1, x5 = 0, x6 = 1;
         int horCalcX1 = 0, verCalcX1 = 0, diagTopLeftCalcX1 = 0, diagBottomLeftCalcX1 = 0, horCalcX2 = 0, verCalcX2 = 0, diagTopLeftCalcX2 = 0, diagBottomLeftCalcX2 = 0;
         int horStatX1 = 0, verStatX1 = 0, diagTopLeftStatX1 = 0, diagBottomLeftStatX1 = 0, horStatX2 = 0, verStatX2 = 0, diagTopLeftStatX2 = 0, diagBottomLeftStatX2 = 0;
@@ -280,6 +295,7 @@ public class AIGroup3 extends AI {
         if (horCalcX2 >= 4 || verCalcX2 >= 4 || diagBottomLeftCalcX2 >= 4 || diagTopLeftCalcX2 >= 4) {
             x5 = 1;
         }
+        //todo: find how to check complete sequence
         return (x1*10+x2*10+(x3*1500)*x4+(x5*1000)*x6);
     }
 }
